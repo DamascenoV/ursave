@@ -104,3 +104,17 @@ func DeleteURL(name string) error {
 
 	return nil
 }
+
+func EditURL(name, newURL string) error {
+	if db == nil {
+		log.Fatal("Database connection is not initialized")
+	}
+
+	updateQuery := "UPDATE urls SET url = ? WHERE name = ?"
+	_, err := db.Exec(updateQuery, newURL, name)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
