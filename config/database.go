@@ -90,3 +90,17 @@ func AddUrl(name string, url string) error {
 
 	return nil
 }
+
+func DeleteURL(name string) error {
+	if db == nil {
+		log.Fatal("Database connection is not initialized")
+	}
+
+	deleteQuery := "DELETE FROM urls WHERE name = ?"
+	_, err := db.Exec(deleteQuery, name)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
