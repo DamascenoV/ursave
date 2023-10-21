@@ -4,16 +4,14 @@ Copyright © 2023 DAMASCENOV
 package cmd
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
+	"os/exec"
 
+	"github.com/damascenov/ursave/config"
 	"github.com/koki-develop/go-fzf"
 	"github.com/spf13/cobra"
-	_ "github.com/mattn/go-sqlite3"
 )
-
-var db *sql.DB
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
@@ -26,7 +24,6 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		initializeDb()
 		getUrls()
 	},
 }
@@ -35,33 +32,8 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 }
 
-func initializeDb() {
-	dbPath := "ursave.db"
-	var err error
-	db, err = sql.Open("sqlite3", dbPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func getUrls() {
-	query := "SELECT name FROM urls"
-	rows, err := db.Query(query)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	var items []string
-
-	for rows.Next() {
-		var name string
-		err := rows.Scan(&name)
-		if err != nil {
-			log.Fatal(err)
-		}
-		items = append(items, name)
-	}
+	items := config.GetUrls()
 
 	fzf, err := fzf.New()
 	if err != nil {
@@ -69,13 +41,26 @@ func getUrls() {
 	}
 
 	idxs, err := fzf.Find(items, func(i int) string {
-		return items[i]
+		return items[i].Name
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for _, i := range idxs {
-		fmt.Println("ESSE É O INDEX", i)
+	if len(idxs) == 0 {
+		fmt.Println("No urls found")
+		return
 	}
+
+	selectedUrl := items[idxs[0]].Url
+	openUrlInBrowser(selectedUrl)
+}
+
+func openUrlInBrowser(url string) {
+	cmd := exec.Command("xdg-open", url)
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+	
 }

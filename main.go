@@ -1,10 +1,11 @@
 /*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-
+Copyright © 2023 DAMASCENOV
 */
 package main
 
-import "github.com/damascenov/ursave/cmd"
+import (
+	"github.com/damascenov/ursave/cmd"
+)
 
 func main() {
 	cmd.Execute()
