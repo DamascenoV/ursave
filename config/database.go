@@ -74,6 +74,22 @@ func GetUrls() []Url {
 	return urls
 }
 
+func GetUrl(name string) (Url, error) {
+	if db == nil {
+		log.Fatal("Database connection is not initialized.")
+	}
+
+	query := "SELECT id, name, url FROM urls WHERE name = ?"
+	row := db.QueryRow(query, name)
+	var url Url
+	err := row.Scan(&url.ID, &url.Name, &url.Url)
+	if err != nil {
+		return url, err
+	}
+
+	return url, nil
+}
+
 func AddUrl(name string, url string) error {
 	if db == nil {
 		log.Fatal("Database connection is not initialized.")

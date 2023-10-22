@@ -6,7 +6,6 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"os/exec"
 
 	"github.com/damascenov/ursave/config"
 	"github.com/koki-develop/go-fzf"
@@ -49,14 +48,5 @@ func getUrls() {
 	}
 
 	selectedUrl := items[idxs[0]].Url
-	openUrlInBrowser(selectedUrl)
-}
-
-func openUrlInBrowser(url string) {
-	cmd := exec.Command("xdg-open", url)
-	err := cmd.Run()
-	if err != nil {
-		log.Fatal(err)
-	}
-	
+	config.OpenUrlInBrowser(selectedUrl)
 }

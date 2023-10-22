@@ -4,14 +4,12 @@ Copyright © 2023 DAMASCENOV
 package cmd
 
 import (
-	"fmt"
+	"log"
 	"os"
 
-	"github.com/spf13/cobra"
 	"github.com/damascenov/ursave/config"
+	"github.com/spf13/cobra"
 )
-
-
 
 var rootCmd = &cobra.Command{
 	Use:   "UrSave",
@@ -19,7 +17,23 @@ var rootCmd = &cobra.Command{
 	Long: `UrSave is a CLI url saver.
 	You can save your favorite urls and open in the browser`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Creating Database")
+		open, _ := cmd.Flags().GetString("open")
+
+		if open == "" {
+			err := cmd.Help()
+			if err != nil {
+				log.Fatal(err)
+			}
+			return
+		}
+
+		url, err := config.GetUrl(open)
+		if err != nil {
+			log.Fatal("Record not found in UrSave")
+			return
+		}
+
+		config.OpenUrlInBrowser(url.Url)
 	},
 }
 
@@ -43,6 +57,5 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().StringP("open", "o", "", "Open the url in the browser")
 }
-
-

@@ -1,5 +1,5 @@
 /*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
+Copyright © 2023 DAMASCENOV
 */
 package cmd
 
@@ -19,15 +19,15 @@ var deleteCmd = &cobra.Command{
 		name, _ := cmd.Flags().GetString("name")
 
 		if name == "" {
-		    fmt.Println("Name of the URL to delete is required")
-		    return
+			fmt.Println("Name of the URL to delete is required")
+			return
 		}
 
 		err := config.DeleteURL(name)
 		if err != nil {
-		    fmt.Println("Error deleting URL:", err)
+			fmt.Println("Error deleting URL:", err)
 		} else {
-		    fmt.Printf("URL '%s' deleted successfully.\n", name)
+			fmt.Printf("URL '%s' deleted successfully.\n", name)
 		}
 	},
 }

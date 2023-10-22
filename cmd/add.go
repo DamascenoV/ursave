@@ -14,22 +14,22 @@ import (
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a url",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-	name, _ := cmd.Flags().GetString("name")
-        url, _ := cmd.Flags().GetString("url")
+		name, _ := cmd.Flags().GetString("name")
+		url, _ := cmd.Flags().GetString("url")
 
-        if name == "" || url == "" {
-            fmt.Println("Both name and URL are required")
-            return
-        }
+		if name == "" || url == "" {
+			fmt.Println("Both name and URL are required")
+			return
+		}
 
-        err := config.AddUrl(name, url)
-        if err != nil {
-            fmt.Println("Error adding URL:", err)
-        } else {
-            fmt.Printf("URL '%s' added successfully.\n", name)
-        }
+		err := config.AddUrl(name, url)
+		if err != nil {
+			fmt.Println("Error adding URL:", err)
+		} else {
+			fmt.Printf("URL '%s' added successfully.\n", name)
+		}
 	},
 }
 
