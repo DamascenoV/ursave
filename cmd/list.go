@@ -17,7 +17,7 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List saved urls",
 	Run: func(cmd *cobra.Command, args []string) {
-		getUrls()
+		GetUrls()
 	},
 }
 
@@ -25,7 +25,7 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 }
 
-func getUrls() {
+func GetUrls() {
 	items := config.GetUrls()
 
 	fzf, err := fzf.New(

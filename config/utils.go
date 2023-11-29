@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"net/url"
 	"os/exec"
 )
 
@@ -11,4 +12,9 @@ func OpenUrlInBrowser(url string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func IsValidUrl(input string) bool {
+	u, err := url.Parse(input)
+	return err == nil && u.Scheme!= "" && u.Host!= ""
 }
