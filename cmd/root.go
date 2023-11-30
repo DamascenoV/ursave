@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/damascenov/ursave/config"
+	"github.com/koki-develop/go-fzf"
 	"github.com/spf13/cobra"
 )
 
@@ -20,11 +21,12 @@ var rootCmd = &cobra.Command{
 		open, _ := cmd.Flags().GetString("open")
 
 		if open == "" {
-			err := cmd.Help()
+			option, err := getOptions(cmd)
 			if err != nil {
 				log.Fatal(err)
 			}
-			return
+
+			runOption(option)
 		}
 
 		url, err := config.GetUrl(open)
@@ -58,4 +60,49 @@ func init() {
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.Flags().StringP("open", "o", "", "Open the url in the browser")
+}
+
+
+func getOptions(cmd *cobra.Command) (string, error) {
+	items := []string{"add", "edit", "list", "delete"}
+
+	f, err := fzf.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	idxs, err := f.Find(items, func(i int) string { return items[i] })
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, i := range idxs {
+		return items[i], nil
+	}
+
+	return "", err
+}
+
+func runOption(option string) {
+	if option == "add" {
+		PromptAdd()
+		return
+	}
+	
+	if option == "list" {
+		GetUrls()
+		return
+	}
+
+	if option == "delete" {
+		PromptDelete()
+		return
+	}
+
+	if option == "edit" {
+		PromptEdit()
+		return
+	}
+
+	println("Invalid")
 }

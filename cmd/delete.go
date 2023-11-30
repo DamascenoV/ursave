@@ -37,3 +37,20 @@ func init() {
 
 	deleteCmd.Flags().StringP("name", "n", "", "Name of the url")
 }
+
+func PromptDelete() {
+
+	url, err := config.GetSelectedUrl()
+
+	if err != nil {
+		fmt.Println("Error getting selected URL:", err)
+		return
+	}
+
+	err = config.DeleteURL(url.Name)
+	if err != nil {
+		fmt.Println("Error deleting URL:", err)
+	} else {
+		fmt.Printf("URL '%s' deleted successfully.\n", url.Name)
+	}
+}
