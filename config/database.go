@@ -2,6 +2,7 @@ package config
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -83,7 +84,7 @@ func GetUrl(name string) (Url, error) {
 	row := db.QueryRow(query, name)
 	var url Url
 	err := row.Scan(&url.ID, &url.Name, &url.Url)
-	if err != nil {
+	if err == nil {
 		return url, err
 	}
 
@@ -131,15 +132,31 @@ func DeleteURL(name string) error {
 	return nil
 }
 
-func EditURL(name, newURL string) error {
+func EditURL(name, newName, newURL string) error {
 	if db == nil {
 		log.Fatal("Database connection is not initialized")
 	}
 
-	updateQuery := "UPDATE urls SET url = ? WHERE name = ?"
-	_, err := db.Exec(updateQuery, newURL, name)
+	if newName == "" {
+		newName = name
+	}
+
+	fmt.Println(newName, newURL, name)
+
+	updateQuery := "UPDATE urls SET url = ?, name = ? WHERE name = ?"
+	result, err := db.Exec(updateQuery, newURL, newName, name)
+
 	if err != nil {
 		return err
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rows == 0 {
+		return sql.ErrNoRows
 	}
 
 	return nil

@@ -99,6 +99,10 @@ func runOption(option string) {
 		return
 	}
 
+	if option == "edit" {
+		PromptEdit()
+		return
+	}
+
 	println("Invalid")
-	return
 }
