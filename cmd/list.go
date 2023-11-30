@@ -5,10 +5,8 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/damascenov/ursave/config"
-	"github.com/koki-develop/go-fzf"
 	"github.com/spf13/cobra"
 )
 
@@ -26,27 +24,12 @@ func init() {
 }
 
 func GetUrls() {
-	items := config.GetUrls()
+	selectedUrl, err := config.GetSelectedUrl()
 
-	fzf, err := fzf.New(
-		fzf.WithInputPosition(fzf.InputPositionBottom),
-	)
 	if err != nil {
-		log.Fatal(err)
-	}
-
-	idxs, err := fzf.Find(items, func(i int) string {
-		return items[i].Name
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if len(idxs) == 0 {
-		fmt.Println("No urls found")
+		fmt.Println("Error getting selected URL:", err)
 		return
 	}
 
-	selectedUrl := items[idxs[0]].Url
-	config.OpenUrlInBrowser(selectedUrl)
+	config.OpenUrlInBrowser(selectedUrl.Url)
 }

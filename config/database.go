@@ -113,7 +113,17 @@ func DeleteURL(name string) error {
 	}
 
 	deleteQuery := "DELETE FROM urls WHERE name = ?"
-	_, err := db.Exec(deleteQuery, name)
+	result, err := db.Exec(deleteQuery, name)
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rows == 0 {
+		return sql.ErrNoRows
+	}
+	
 	if err != nil {
 		return err
 	}

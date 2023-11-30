@@ -94,6 +94,11 @@ func runOption(option string) {
 		return
 	}
 
+	if option == "delete" {
+		PromptDelete()
+		return
+	}
+
 	println("Invalid")
 	return
 }
